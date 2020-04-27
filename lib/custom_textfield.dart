@@ -4,6 +4,8 @@ typedef CustomOnSubmitted(String value);
 
 class CustomTextfield extends StatefulWidget {
   final String fieldName;
+  final TextEditingController controller;
+  final bool obscureText;
   final CustomOnSubmitted onSubmitted;
   final TextStyle fieldStyle;
   final TextStyle textFieldStyle;
@@ -14,7 +16,9 @@ class CustomTextfield extends StatefulWidget {
   CustomTextfield(
       {Key key,
       this.bgColor = const Color(0xff152057),
+      @required this.controller,
       @required this.fieldName,
+      this.obscureText = false,
       @required this.onSubmitted,
       this.minHeight = 60.0,
       this.minWidth = 220.0,
@@ -23,6 +27,7 @@ class CustomTextfield extends StatefulWidget {
       this.textFieldStyle = const TextStyle(
           color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w400)})
       : assert(fieldName != null, onSubmitted != null),
+        assert(controller != null),
         assert(minWidth >= 220.0),
         assert(minHeight >= 60.0),
         super(key: key);
@@ -55,7 +60,7 @@ class _CustomTextfieldState extends State<CustomTextfield>
     }
 
     if (!_focusNode.hasFocus) {
-      if (fieldvalue == "") {
+      if (widget.controller.text == "") {
         _controller.reverse();
       } else {
         _controller.forward();
@@ -100,6 +105,8 @@ class _CustomTextfieldState extends State<CustomTextfield>
                   padding: const EdgeInsets.symmetric(
                       vertical: 5.0, horizontal: 10.0),
                   child: TextField(
+                    obscureText: widget.obscureText,
+                    controller: widget.controller,
                     focusNode: _focusNode,
                     style: widget.textFieldStyle,
                     autofocus: false,

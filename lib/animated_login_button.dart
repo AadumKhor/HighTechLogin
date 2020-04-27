@@ -38,7 +38,7 @@ class _CustomLoginButtonState extends State<CustomLoginButton>
   void initState() {
     super.initState();
     _controller = new AnimationController(
-        vsync: this, duration: new Duration(seconds: 3));
+        vsync: this, duration: new Duration(milliseconds: 1200));
     _controller.forward();
     _controller
       ..addStatusListener((status) {
@@ -96,7 +96,7 @@ class _CustomLoginButtonState extends State<CustomLoginButton>
                 xValue = widget.minWidth / 2 -
                     ((widget.minWidth) * (value - 0.5) / .25);
               } else {
-                xValue = -widget.minWidth / 2 - containerSize/4;
+                xValue = -widget.minWidth / 2 - containerSize / 4;
                 yValue = widget.minHeight / 2 -
                     ((widget.minHeight) * (value - 0.75) / .25);
               }
@@ -108,6 +108,7 @@ class _CustomLoginButtonState extends State<CustomLoginButton>
             }),
         InkWell(
           onTap: widget.onPressed,
+          splashColor: widget.buttonActiveColor,
           child: Container(
             height: widget.minHeight,
             width: widget.minWidth,
@@ -126,18 +127,6 @@ class _CustomLoginButtonState extends State<CustomLoginButton>
       ],
     );
   }
-
-  // Path drawPath(){
-
-  // }
-
-  // Offset calculate(value) {
-  //   PathMetrics pathMetrics = _path.computeMetrics();
-  //   PathMetric pathMetric = pathMetrics.elementAt(0);
-  //   value = pathMetric.length * value;
-  //   Tangent pos = pathMetric.getTangentForOffset(value);
-  //   return pos.position;
-  // }
 }
 
 class LinePainter extends CustomPainter {

@@ -24,7 +24,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String userName = "", passWord = "";
+  TextEditingController userName = new TextEditingController(),
+      passWord = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +47,9 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CustomTextfield(
+                  controller: userName,
                   onSubmitted: (String value) {
-                    setState(() {
-                      userName = value.trim();
-                    });
+                    print("Username = " + userName.text.trim());
                   },
                   fieldName: 'Username',
                 ),
@@ -57,10 +57,10 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CustomTextfield(
+                  obscureText: true,
+                  controller: passWord,
                   onSubmitted: (String value) {
-                    setState(() {
-                      passWord = value.trim();
-                    });
+                    print("Pwd = " + passWord.text.trim());
                   },
                   fieldName: 'Password',
                 ),
@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: CustomLoginButton(
                     buttonInactiveColor: Colors.transparent,
                     onPressed: () {
-                      print('Button Pressed');
+                      print(userName.text + passWord.text);
                     }),
               )
             ],
