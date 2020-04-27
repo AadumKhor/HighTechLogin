@@ -14,8 +14,8 @@ class CustomLoginButton extends StatefulWidget {
 
   CustomLoginButton(
       {Key key,
-      this.buttonInactiveColor = const Color(0xff000000),
-      this.buttonActiveColor = const Color(0xff57ffe3),
+      @required this.buttonInactiveColor,
+      this.buttonActiveColor = const Color(0xff03e9f4),
       @required this.onPressed,
       this.buttonText = "Login",
       this.minHeight = 50.0,
@@ -63,49 +63,51 @@ class _CustomLoginButtonState extends State<CustomLoginButton>
       children: [
         CustomPaint(
           painter: LinePainter(
-              dotColor: widget.buttonActiveColor, fraction: _controller),
+              color1: widget.buttonInactiveColor,
+              color2: widget.buttonActiveColor,
+              fraction: _controller),
           child: Container(
             width: widget.minWidth + 10.0,
             height: widget.minHeight + 10.0,
           ),
         ),
-        AnimatedBuilder(
-            animation: _controller,
-            child: Transform(
-              transform: Matrix4.identity()..rotateZ(math.pi / 4),
-              child: Container(
-                width: containerSize,
-                height: containerSize,
-                decoration: BoxDecoration(
-                    color: widget.buttonActiveColor, shape: BoxShape.rectangle),
-              ),
-            ),
-            builder: (context, child) {
-              double xValue = 0.0, yValue = 0.0;
-              double value = _controller.value;
-              if (_controller.value <= 0.25) {
-                xValue = ((widget.minWidth) * (_controller.value / 0.25)) -
-                    widget.minWidth / 2;
-                yValue = -(widget.minHeight / 2) - containerSize;
-              } else if (value > 0.25 && value <= 0.5) {
-                xValue = widget.minWidth / 2 + containerSize;
-                yValue = ((widget.minHeight) * (value - 0.25) / .25) -
-                    widget.minHeight / 2;
-              } else if (value > 0.5 && value <= 0.75) {
-                yValue = widget.minHeight / 2 + containerSize / 2;
-                xValue = widget.minWidth / 2 -
-                    ((widget.minWidth) * (value - 0.5) / .25);
-              } else {
-                xValue = -widget.minWidth / 2 - containerSize / 4;
-                yValue = widget.minHeight / 2 -
-                    ((widget.minHeight) * (value - 0.75) / .25);
-              }
+        // AnimatedBuilder(
+        //     animation: _controller,
+        //     child: Transform(
+        //       transform: Matrix4.identity()..rotateZ(math.pi / 4),
+        //       child: Container(
+        //         width: containerSize,
+        //         height: containerSize,
+        //         decoration: BoxDecoration(
+        //             color: widget.buttonActiveColor, shape: BoxShape.rectangle),
+        //       ),
+        //     ),
+        //     builder: (context, child) {
+        //       double xValue = 0.0, yValue = 0.0;
+        //       double value = _controller.value;
+        //       if (_controller.value <= 0.25) {
+        //         xValue = ((widget.minWidth) * (_controller.value / 0.25)) -
+        //             widget.minWidth / 2;
+        //         yValue = -(widget.minHeight / 2) - containerSize;
+        //       } else if (value > 0.25 && value <= 0.5) {
+        //         xValue = widget.minWidth / 2 + containerSize;
+        //         yValue = ((widget.minHeight) * (value - 0.25) / .25) -
+        //             widget.minHeight / 2;
+        //       } else if (value > 0.5 && value <= 0.75) {
+        //         yValue = widget.minHeight / 2 + containerSize / 2;
+        //         xValue = widget.minWidth / 2 -
+        //             ((widget.minWidth) * (value - 0.5) / .25);
+        //       } else {
+        //         xValue = -widget.minWidth / 2 - containerSize / 4;
+        //         yValue = widget.minHeight / 2 -
+        //             ((widget.minHeight) * (value - 0.75) / .25);
+        //       }
 
-              return Transform(
-                transform: Matrix4.identity()..translate(xValue, yValue, 0),
-                child: child,
-              );
-            }),
+        //       return Transform(
+        //         transform: Matrix4.identity()..translate(xValue, yValue, 0),
+        //         child: child,
+        //       );
+        //     }),
         InkWell(
           onTap: widget.onPressed,
           splashColor: widget.buttonActiveColor,
@@ -131,16 +133,31 @@ class _CustomLoginButtonState extends State<CustomLoginButton>
 
 class LinePainter extends CustomPainter {
   final Animation<double> fraction;
-  final Color dotColor;
 
-  LinePainter({@required this.fraction, @required this.dotColor})
+  final Color color1;
+  final Color color2;
+
+  LinePainter(
+      {@required this.fraction, @required this.color1, @required this.color2})
       : super(repaint: fraction);
+
+  Rect rect = new Rect.fromCircle(
+    center: new Offset(165.0, 55.0),
+    radius: 180.0,
+  );
 
   @override
   void paint(Canvas canvas, Size size) {
+    // final Gradient gradient = new LinearGradient(
+    //   begin: Alignment.centerLeft,
+    //   end: Alignment.centerRight,
+    //   colors: [color1, color2],
+    //   stops: [0.1, fraction.value]
+    // );
     Paint _paint = Paint()
-      ..color = dotColor.withAlpha(150)
-      ..strokeWidth = 5.0
+      ..color = color2
+      // ..shader = gradient.createShader(rect)
+      ..strokeWidth = 2.0
       ..strokeCap = StrokeCap.round;
 
     double topLineFraction,
@@ -151,12 +168,9 @@ class LinePainter extends CustomPainter {
 
     if (value <= 0.25) {
       topLineFraction = value / .25;
-      int alpha = (255 * topLineFraction).floor();
 
       canvas.drawLine(
-          Offset(0.0, 0.0),
-          Offset(size.width * topLineFraction, 0.0),
-          _paint..color.withAlpha(alpha));
+          Offset(0.0, 0.0), Offset(size.width * topLineFraction, 0.0), _paint);
     } else if (0.25 <= value && value < 0.5) {
       topLineFraction = 1.0;
       rightLineFraction = (value - 0.25) / 0.25;

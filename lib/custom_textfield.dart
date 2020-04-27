@@ -12,9 +12,13 @@ class CustomTextfield extends StatefulWidget {
   final Color bgColor;
   final double minWidth;
   final double minHeight;
+  final bool allowBorder;
+  final Color borderColor;
 
   CustomTextfield(
       {Key key,
+      this.allowBorder = false,
+      this.borderColor,
       this.bgColor = const Color(0xff152057),
       @required this.controller,
       @required this.fieldName,
@@ -23,13 +27,14 @@ class CustomTextfield extends StatefulWidget {
       this.minHeight = 60.0,
       this.minWidth = 220.0,
       this.fieldStyle = const TextStyle(
-          color: Colors.white, fontSize: 24.0, fontWeight: FontWeight.w600),
+          color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.w500),
       this.textFieldStyle = const TextStyle(
           color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w400)})
       : assert(fieldName != null, onSubmitted != null),
         assert(controller != null),
         assert(minWidth >= 220.0),
         assert(minHeight >= 60.0),
+        assert(allowBorder ? borderColor != null : borderColor == null),
         super(key: key);
 
   @override
@@ -83,12 +88,15 @@ class _CustomTextfieldState extends State<CustomTextfield>
       child: Container(
         width: widget.minWidth,
         height: widget.minHeight,
-        decoration: new BoxDecoration(color: widget.bgColor, boxShadow: [
-          BoxShadow(
-              offset: Offset(0, 20),
-              color: Color.fromARGB(120, 0, 0, 0),
-              blurRadius: 22.0)
-        ]),
+        decoration: new BoxDecoration(
+            border: Border.all(color: widget.borderColor, width: 2.0),
+            color: widget.bgColor,
+            boxShadow: [
+              BoxShadow(
+                  offset: Offset(0, 20),
+                  color: Color.fromARGB(120, 0, 0, 0),
+                  blurRadius: 22.0)
+            ]),
         child: GestureDetector(
           onTap: () {
             if (!_focusNode.hasFocus) {
